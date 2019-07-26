@@ -13,6 +13,13 @@ loadEventListeners();
 function loadEventListeners() {
   // Add task event
   form.addEventListener("submit", addTask);
+  // Remove task event
+  taskList.addEventListener("click", removeTask);
+  // Clear task evenets
+  clearBtn.addEventListener("click", clearTask);
+  // Fiter tasks event
+
+  filter.addEventListener("keyup", filterTask);
 }
 
 // Add task
@@ -32,7 +39,7 @@ function addTask(e) {
   // Create new link element
 
   const link = document.createElement("a");
-  link.className = "delet-item secondary-content";
+  link.className = "delete-item secondary-content";
   // Add icon html
   link.innerHTML = "<i class='fa fa-remove'></i>";
   // Append link to li
@@ -45,4 +52,38 @@ function addTask(e) {
   taskInput.value = "";
 
   e.preventDefault();
+}
+
+// Remove Task
+
+function removeTask(e) {
+  if (e.target.parentElement.classList.contains("delete-item")) {
+    if (confirm("Are You Sure?")) {
+      e.target.parentElement.parentElement.remove();
+    }
+  }
+}
+
+// Clear task
+
+function clearTask(e) {
+  // taskList.innerHtml = "";
+  // Faster
+  while (taskList.firstChild) {
+    taskList.removeChild(taskList.firstChild);
+  }
+  // innerHTML Vs remove child https://jsperf.com/innerhtml-vs-removechild/47
+}
+
+function filterTask(e) {
+  const text = e.target.value.toLowerCase();
+  document.querySelectorAll(".collection-item").forEach(function(task) {
+    const item = task.firstChild.textContent;
+
+    if (item.toLowerCase().indexOf(text) != -1) {
+      task.style.display = "block";
+    } else {
+      task.style.display = "none";
+    }
+  });
 }
